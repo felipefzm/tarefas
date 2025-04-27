@@ -13,4 +13,5 @@ public class UsuarioDTOout {
     public static UsuarioDTOout toDTOout(Usuario usuario){
         return new UsuarioDTOout(usuario.getId(), usuario.getUsername());
     }
+
 }

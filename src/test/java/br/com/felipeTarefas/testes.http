@@ -1,0 +1,15 @@
+
+
+POST http://localhost:8080/usuarios
+Content-Type: application/json
+
+{   
+    
+    "username": "rogeriojunior",
+    "email": "rogerinjunior@gmail.com", 
+    "cpf" : "143.235.156-00"
+} 
+
+
+GET http://localhost:8080/usuarios
+Content-Type: application/json

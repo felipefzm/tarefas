@@ -2,6 +2,7 @@ package br.com.felipeTarefas.service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
@@ -23,9 +24,11 @@ public class UsuarioService extends Exception {
         this.usuarioRepository = usuarioRepository;
     }
 
-    public List<Usuario> listarUsuarios() {
+    public List<UsuarioDTOout> listarUsuarios() { // Mudar pra retornar DTO
         Sort sort = Sort.by("id").ascending();
-        return usuarioRepository.findAll(sort);
+        List<Usuario> usuarios = usuarioRepository.findAll(sort);
+        return usuarios.stream().map(UsuarioDTOout::toDTOout)
+        .collect(Collectors.toList());
     }
 
     public UsuarioDTOout criarUsuario(UsuarioDTOin usuarioDTOin) {

@@ -2,10 +2,13 @@ package br.com.felipeTarefas.domain;
 
 import java.time.LocalDateTime;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
+import br.com.felipeTarefas.enums.PrioridadeEnum;
 import br.com.felipeTarefas.enums.PrioridadeEnumConverter;
 import br.com.felipeTarefas.enums.StatusEnum;
-import br.com.felipeTarefas.enums.prioridadeEnum;
-import br.com.felipeTarefas.enums.statusEnum;
+import br.com.felipeTarefas.enums.StatusEnumConverter;
 import jakarta.persistence.Column;
 import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
@@ -27,26 +30,30 @@ public class Tarefa {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    public Long id;
+    private Long id;
 
-    public String nome;
+    private String nome;
 
-    public String descricao;
+    private String descricao;
 
-    public LocalDateTime prazo;
+    private LocalDateTime prazo;
 
     @Column(name = "Status")
-    @Convert(converter = StatusEnum.class)
-    public statusEnum status;
+    @Convert(converter = StatusEnumConverter.class)
+    public StatusEnum status;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "usuario_id")
-    public Usuario usuario;
+    @JsonBackReference
+    private Usuario usuario;
 
     @Column(name = "prioridade")
     @Convert(converter = PrioridadeEnumConverter.class)
-    public prioridadeEnum prioridade;
+    private PrioridadeEnum prioridade;
 
     
+    public Long getUsuarioId(){
+        return usuario.getId();
+    }
 
 }

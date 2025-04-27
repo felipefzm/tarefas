@@ -39,7 +39,7 @@ public class UsuarioController {
     })
     
     @GetMapping
-    public List<Usuario> listarUsuarios() {
+    public List<UsuarioDTOout> listarUsuarios() {
         return usuarioService.listarUsuarios();
     }
 
