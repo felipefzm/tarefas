@@ -87,8 +87,9 @@ public class UsuarioController {
             @ApiResponse(responseCode = "500", description = "Erro interno no servidor")
     })
     @GetMapping({ "{id}" })
-    public Optional<Usuario> findById(@PathVariable Long id) {
-        return usuarioService.findById(id);
+    public UsuarioDTOout findById(@PathVariable Long id) {
+        Usuario usuario = usuarioService.findById(id);
+        return UsuarioDTOout.toDTOout(usuario);
     }
 
 }

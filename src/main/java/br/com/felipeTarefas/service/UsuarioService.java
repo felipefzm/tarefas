@@ -69,12 +69,9 @@ public class UsuarioService extends Exception {
         }
     }
 
-    public Optional<Usuario> findById(Long id) {
-        Optional<Usuario> usuario = usuarioRepository.findById(id);
-        if (usuario.isEmpty()) {
-            throw new UsuarioNãoEncontradoException(id);
-        } else
-            return usuario;
+    public Usuario findById(Long id) {
+        return usuarioRepository.findById(id)
+        .orElseThrow(() -> new UsuarioNãoEncontradoException(id));
     }
 
 }

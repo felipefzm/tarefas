@@ -38,6 +38,8 @@ public class TarefaController {
     public List<TarefaDTO> listarTarefasPorUsuario(@PathVariable Long usuarioId) {
         return tarefaService.findTarefasByUsuarioId(usuarioId);        
     }
+
+    
     
     
 

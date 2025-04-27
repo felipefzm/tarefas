@@ -10,5 +10,7 @@ public class UsuarioNãoEncontradoException extends RuntimeException {
         super("Usuário com o id "+id+" não encontrado");
     }
 
+    
+
 
 }
