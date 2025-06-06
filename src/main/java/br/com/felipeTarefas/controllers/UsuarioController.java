@@ -22,6 +22,7 @@ import br.com.felipeTarefas.service.UsuarioService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/usuarios")
@@ -50,7 +51,7 @@ public class UsuarioController {
             @ApiResponse(responseCode = "500", description = "Erro interno no servidor")
     })
     @PostMapping
-    public ResponseEntity<UsuarioDTOout> criarUsuario(@RequestBody UsuarioDTOin usuarioDTOin) {
+    public ResponseEntity<UsuarioDTOout> criarUsuario(@Valid @RequestBody UsuarioDTOin usuarioDTOin) {
         UsuarioDTOout usuarioCriado = usuarioService.criarUsuario(usuarioDTOin);
         return ResponseEntity.status(HttpStatus.CREATED).body(usuarioCriado);
     }

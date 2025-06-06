@@ -27,13 +27,13 @@ public class Usuario {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    public Long id;
+    private Long id;
 
-    public String username;
+    private String username;
 
-    public String email;
+    private String email;
 
-    public String cpf;
+    private String cpf;
 
     @OneToMany(mappedBy = "usuario", fetch = FetchType.LAZY, orphanRemoval = true)
     @JsonManagedReference

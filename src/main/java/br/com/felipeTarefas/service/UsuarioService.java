@@ -4,6 +4,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,8 +17,11 @@ import br.com.felipeTarefas.domain.dtos.UsuarioDTOin;
 import br.com.felipeTarefas.domain.dtos.UsuarioDTOout;
 import br.com.felipeTarefas.repositories.UsuarioRepository;
 
+//TO DO - Trocar HTTps pro controller de novo, arrumar TarefaService e colocar
+// path variable no UpdateUsuario
+
 @Service
-public class UsuarioService extends Exception {
+public class UsuarioService {
 
     private UsuarioRepository usuarioRepository;
 
@@ -24,39 +29,33 @@ public class UsuarioService extends Exception {
         this.usuarioRepository = usuarioRepository;
     }
 
-    public List<UsuarioDTOout> listarUsuarios() { // Mudar pra retornar DTO
+    @Autowired
+    private ModelMapper modelMapper;
+
+    public List<UsuarioDTOout> listarUsuarios() { 
         Sort sort = Sort.by("id").ascending();
         List<Usuario> usuarios = usuarioRepository.findAll(sort);
-        return usuarios.stream().map(UsuarioDTOout::toDTOout)
-        .collect(Collectors.toList());
+
+        return usuarios.stream().map(usuario -> modelMapper
+                            .map(usuarios, UsuarioDTOout.class))
+                            .collect(Collectors.toList());
     }
+
 
     public UsuarioDTOout criarUsuario(UsuarioDTOin usuarioDTOin) {
-        Usuario newUsuario = new Usuario();
-        newUsuario.setId(usuarioDTOin.getId());
-        newUsuario.setCpf(usuarioDTOin.getCpf());
-        newUsuario.setEmail(usuarioDTOin.getEmail());
-        newUsuario.setUsername(usuarioDTOin.getUsername());
+        Usuario newUsuario = modelMapper.map(usuarioDTOin, Usuario.class);
         usuarioRepository.save(newUsuario);
-        return UsuarioDTOout.toDTOout(newUsuario);
+        return modelMapper.map(newUsuario, UsuarioDTOout.class);
+
     }
 
-    public UsuarioDTOout updateUsuario(Long id, UsuarioDTOin usuarioDTOin) {
+    public ResponseEntity<UsuarioDTOout> updateUsuario(Long id, UsuarioDTOin usuarioDTOin) {
         Usuario usuario = usuarioRepository.findById(id)
                 .orElseThrow(() -> new UsuarioNãoEncontradoException(id));
-
-        if (usuarioDTOin.getUsername() != null) {
-            usuario.setUsername(usuarioDTOin.getUsername());
-        }
-        if (usuarioDTOin.getCpf() != null) {
-            usuario.setCpf(usuarioDTOin.getCpf());
-        }
-        if (usuarioDTOin.getEmail() != null) {
-            usuario.setEmail(usuarioDTOin.getEmail());
-        }
-        usuarioRepository.save(usuario);
-
-        return UsuarioDTOout.toDTOout(usuario);
+                modelMapper.map(usuarioDTOin, usuario); // usuário existente
+                usuarioRepository.save(usuario);
+        return ResponseEntity.status(HttpStatus.OK)
+            .body(modelMapper.map(usuario, UsuarioDTOout.class));
     }
 
     public ResponseEntity<Void> deleteUsuario(Long id) {
@@ -69,9 +68,11 @@ public class UsuarioService extends Exception {
         }
     }
 
-    public Usuario findById(Long id) {
-        return usuarioRepository.findById(id)
+    public ResponseEntity<UsuarioDTOout> findById(Long id) {
+        Usuario usuario = usuarioRepository.findById(id)
         .orElseThrow(() -> new UsuarioNãoEncontradoException(id));
+        return ResponseEntity.status(HttpStatus.OK).body(modelMapper
+        .map(usuario, UsuarioDTOout.class));
     }
 
 }

@@ -1,6 +1,7 @@
 package br.com.felipeTarefas.domain.dtos;
 
 import br.com.felipeTarefas.domain.Usuario;
+import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -13,8 +14,13 @@ import lombok.Setter;
 public class UsuarioDTOin {
 
     private Long id;
+
+    @NotBlank(message = "Username é obrigatório")
     private String username;
+
+    @NotBlank(message = "Email é obrigatório")
     private String email;
+
     private String cpf;
 
     public UsuarioDTOin(Usuario usuario){

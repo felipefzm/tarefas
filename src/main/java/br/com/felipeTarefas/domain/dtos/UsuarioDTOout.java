@@ -3,15 +3,17 @@ package br.com.felipeTarefas.domain.dtos;
 import br.com.felipeTarefas.domain.Usuario;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Getter
+@Setter
 @AllArgsConstructor
+@NoArgsConstructor
 public class UsuarioDTOout {
-    private final Long id;
-    private final String username;
 
-    public static UsuarioDTOout toDTOout(Usuario usuario){
-        return new UsuarioDTOout(usuario.getId(), usuario.getUsername());
-    }
+    private Long id; // não retornar no sistema direto, colocar só no teste dps
+    private String username;
+    private String email; 
 
 }
