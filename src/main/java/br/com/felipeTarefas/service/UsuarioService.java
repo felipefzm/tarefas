@@ -7,8 +7,6 @@ import java.util.stream.Collectors;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import br.com.felipeTarefas.config.exceptions.UsuarioNãoEncontradoException;
@@ -16,14 +14,18 @@ import br.com.felipeTarefas.domain.Usuario;
 import br.com.felipeTarefas.domain.dtos.UsuarioDTOin;
 import br.com.felipeTarefas.domain.dtos.UsuarioDTOout;
 import br.com.felipeTarefas.repositories.UsuarioRepository;
+import lombok.extern.slf4j.Slf4j;
 
-//TO DO - Trocar HTTps pro controller de novo, arrumar TarefaService e colocar
-// path variable no UpdateUsuario
+// TO DO - Arrumar e revisar camadas de Tarefas
+// TO DO - Testes unitários
+// TO DO - Terminar de implementar logs
+// TO DO - Começar autenticação com JWT
 
 @Service
+@Slf4j
 public class UsuarioService {
 
-    private UsuarioRepository usuarioRepository;
+    private UsuarioRepository usuarioRepository; 
 
     public UsuarioService(UsuarioRepository usuarioRepository) {
         this.usuarioRepository = usuarioRepository;
@@ -36,6 +38,12 @@ public class UsuarioService {
         Sort sort = Sort.by("id").ascending();
         List<Usuario> usuarios = usuarioRepository.findAll(sort);
 
+        if (usuarios.isEmpty()) {
+            log.info("Nenhum usuário encontrado na base de dados.");
+        } else {
+            log.info("Foram encontrados {} usuários.", usuarios.size());
+        }
+
         return usuarios.stream().map(usuario -> modelMapper
                             .map(usuarios, UsuarioDTOout.class))
                             .collect(Collectors.toList());
@@ -45,34 +53,33 @@ public class UsuarioService {
     public UsuarioDTOout criarUsuario(UsuarioDTOin usuarioDTOin) {
         Usuario newUsuario = modelMapper.map(usuarioDTOin, Usuario.class);
         usuarioRepository.save(newUsuario);
+        log.info("Usuário criado e salvo no banco.");
         return modelMapper.map(newUsuario, UsuarioDTOout.class);
 
     }
 
-    public ResponseEntity<UsuarioDTOout> updateUsuario(Long id, UsuarioDTOin usuarioDTOin) {
+    public UsuarioDTOout atualizaUsuario(Long id, UsuarioDTOin usuarioDTOin) {
         Usuario usuario = usuarioRepository.findById(id)
                 .orElseThrow(() -> new UsuarioNãoEncontradoException(id));
-                modelMapper.map(usuarioDTOin, usuario); // usuário existente
+                modelMapper.map(usuarioDTOin, usuario); 
                 usuarioRepository.save(usuario);
-        return ResponseEntity.status(HttpStatus.OK)
-            .body(modelMapper.map(usuario, UsuarioDTOout.class));
+        log.info("Usuário atualizado e salvo.");
+        return modelMapper.map(usuario, UsuarioDTOout.class);
     }
 
-    public ResponseEntity<Void> deleteUsuario(Long id) {
+    public void deleteUsuario(Long id) {
         Optional<Usuario> usuario = usuarioRepository.findById(id);
         if (usuario.isEmpty()) {
             throw new UsuarioNãoEncontradoException(id);
         } else {
-            usuarioRepository.deleteById(id);
-            return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+             usuarioRepository.deleteById(id);
         }
     }
 
-    public ResponseEntity<UsuarioDTOout> findById(Long id) {
+    public UsuarioDTOout findById(Long id) {
         Usuario usuario = usuarioRepository.findById(id)
         .orElseThrow(() -> new UsuarioNãoEncontradoException(id));
-        return ResponseEntity.status(HttpStatus.OK).body(modelMapper
-        .map(usuario, UsuarioDTOout.class));
+        return modelMapper.map(usuario, UsuarioDTOout.class);
     }
 
 }
