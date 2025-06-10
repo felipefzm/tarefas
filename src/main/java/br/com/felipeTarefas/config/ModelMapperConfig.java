@@ -13,7 +13,6 @@ public ModelMapper modelMapper(){
 
     modelMapper.getConfiguration()
     .setSkipNullEnabled(true);
-
     return modelMapper;
     
 }

@@ -4,13 +4,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
 @ResponseStatus(HttpStatus.NOT_FOUND)
-public class UsuarioNãoEncontradoException extends RuntimeException {
+public class TarefaNaoEncontradaException extends RuntimeException {
     
-    public UsuarioNãoEncontradoException(Long id){
-        super("Usuário com o id "+id+" não encontrado");
+    public TarefaNaoEncontradaException(Long id){
+        super("Tarefa com id "+id+" não foi encontrada");
     }
-
-    
-
-
 }

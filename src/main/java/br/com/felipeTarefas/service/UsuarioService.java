@@ -9,7 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
-import br.com.felipeTarefas.config.exceptions.UsuarioNãoEncontradoException;
+import br.com.felipeTarefas.config.exceptions.UsuarioNaoEncontradoException;
 import br.com.felipeTarefas.domain.Usuario;
 import br.com.felipeTarefas.domain.dtos.UsuarioDTOin;
 import br.com.felipeTarefas.domain.dtos.UsuarioDTOout;
@@ -20,6 +20,7 @@ import lombok.extern.slf4j.Slf4j;
 // TO DO - Testes unitários
 // TO DO - Terminar de implementar logs
 // TO DO - Começar autenticação com JWT
+// TO DO - Dividir DTOs de tarefas e associar automaticamente tarefa criada ao usuário logado
 
 @Service
 @Slf4j
@@ -60,7 +61,7 @@ public class UsuarioService {
 
     public UsuarioDTOout atualizaUsuario(Long id, UsuarioDTOin usuarioDTOin) {
         Usuario usuario = usuarioRepository.findById(id)
-                .orElseThrow(() -> new UsuarioNãoEncontradoException(id));
+                .orElseThrow(() -> new UsuarioNaoEncontradoException(id));
                 modelMapper.map(usuarioDTOin, usuario); 
                 usuarioRepository.save(usuario);
         log.info("Usuário atualizado e salvo.");
@@ -70,7 +71,7 @@ public class UsuarioService {
     public void deleteUsuario(Long id) {
         Optional<Usuario> usuario = usuarioRepository.findById(id);
         if (usuario.isEmpty()) {
-            throw new UsuarioNãoEncontradoException(id);
+            throw new UsuarioNaoEncontradoException(id);
         } else {
              usuarioRepository.deleteById(id);
         }
@@ -78,8 +79,13 @@ public class UsuarioService {
 
     public UsuarioDTOout findById(Long id) {
         Usuario usuario = usuarioRepository.findById(id)
-        .orElseThrow(() -> new UsuarioNãoEncontradoException(id));
+        .orElseThrow(() -> new UsuarioNaoEncontradoException(id));
         return modelMapper.map(usuario, UsuarioDTOout.class);
+    }
+
+    public Usuario findEntityById(Long id){
+        return usuarioRepository.findById(id)
+        .orElseThrow(() -> new UsuarioNaoEncontradoException(id));
     }
 
 }

@@ -6,15 +6,14 @@ import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
-import br.com.felipeTarefas.domain.dtos.UsuarioDTOin;
 import lombok.extern.slf4j.Slf4j;
 
 @ControllerAdvice
 @Slf4j
 public class GlobalExceptionHandler {
 
-    @ExceptionHandler(UsuarioNãoEncontradoException.class) // fazer cenário de teste
-    public ResponseEntity<String> handleUsuarioNaoEncontrado(UsuarioNãoEncontradoException exception) {
+    @ExceptionHandler(UsuarioNaoEncontradoException.class) // fazer cenário de teste
+    public ResponseEntity<String> handleUsuarioNaoEncontrado(UsuarioNaoEncontradoException exception) {
         log.warn("Usuario não encontrado: {}", exception.getMessage()); // log de aviso
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(exception.getMessage());
     }
@@ -29,5 +28,11 @@ public class GlobalExceptionHandler {
         public ResponseEntity<Object> handleHttpMessageNotReadable(HttpMessageNotReadableException exception){
             return ResponseEntity.badRequest().body("Requisição mal formatada: " +exception.getMostSpecificCause()
             .getMessage());
+    }
+
+    @ExceptionHandler(TarefaNaoEncontradaException.class)
+    public ResponseEntity<String> handleTarefaNaoEncontrada(TarefaNaoEncontradaException exception){
+        log.warn("Tarefa não encontrada: {}", exception.getMessage());
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(exception.getMessage());
     }
 }

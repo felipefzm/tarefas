@@ -3,7 +3,6 @@ package br.com.felipeTarefas.domain;
 import java.time.LocalDateTime;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import br.com.felipeTarefas.enums.PrioridadeEnum;
 import br.com.felipeTarefas.enums.PrioridadeEnumConverter;

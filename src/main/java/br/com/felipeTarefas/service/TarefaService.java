@@ -1,14 +1,14 @@
 package br.com.felipeTarefas.service;
 
 import java.util.List;
-import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
-import org.springframework.beans.BeanUtils;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import br.com.felipeTarefas.config.exceptions.UsuarioNãoEncontradoException;
+import br.com.felipeTarefas.config.exceptions.TarefaNaoEncontradaException;
+import br.com.felipeTarefas.config.exceptions.UsuarioNaoEncontradoException;
 import br.com.felipeTarefas.domain.Tarefa;
 import br.com.felipeTarefas.domain.Usuario;
 import br.com.felipeTarefas.domain.dtos.TarefaDTO;
@@ -19,6 +19,8 @@ import br.com.felipeTarefas.repositories.UsuarioRepository;
 public class TarefaService {
 
     private TarefaRepository tarefaRepository;
+
+    private ModelMapper modelMapper;
 
     @Autowired
     private UsuarioRepository usuarioRepository;
@@ -37,21 +39,16 @@ public class TarefaService {
 
     public TarefaDTO criarTarefa(TarefaDTO tarefaDTO) {
 
-        Tarefa novaTarefa = new Tarefa();
+        Tarefa novaTarefa = modelMapper.map(tarefaDTO, Tarefa.class);
 
-        novaTarefa.setDescricao(tarefaDTO.getDescricao());
-        novaTarefa.setNome(tarefaDTO.getNome());
-        novaTarefa.setPrazo(tarefaDTO.getPrazo());
-        novaTarefa.setPrioridade(tarefaDTO.getPrioridade());
-        novaTarefa.setStatus(tarefaDTO.getStatus());
+        Usuario usuario = usuarioRepository.findById(tarefaDTO.getUsuarioId())
+                .orElseThrow(() -> new UsuarioNaoEncontradoException(tarefaDTO.getUsuarioId())); // associando usuário manualmente na tarefa
 
-        Usuario usuario = usuarioService.findById(tarefaDTO.getUsuarioId());
-
-        novaTarefa.setUsuario(usuario);
+        novaTarefa.setUsuario(usuario); 
 
         Tarefa tarefaSalva = tarefaRepository.save(novaTarefa);
+        return modelMapper.map(tarefaSalva, TarefaDTO.class);
 
-        return new TarefaDTO(tarefaSalva);
     }
 
     public List<TarefaDTO> findTarefasByUsuarioId(Long usuarioId) {
@@ -60,46 +57,28 @@ public class TarefaService {
                 .collect(Collectors.toList());
     }
 
-    public TarefaDTO updateUsuario(Long id, TarefaDTO tarefaDTO) {
+    public TarefaDTO atualizaTarefa(Long id, TarefaDTO tarefaDTO) {
         Tarefa tarefa = tarefaRepository.findById(id)
-                .orElseThrow(() -> new UsuarioNãoEncontradoException(id));
+                .orElseThrow(() -> new TarefaNaoEncontradaException(id));
 
         if (tarefaDTO.getUsuarioId() != null) {
-            Usuario usuario = usuarioService.findById(tarefaDTO.getUsuarioId());
+            Usuario usuario = usuarioService.findEntityById(tarefaDTO.getUsuarioId());
             tarefa.setUsuario(usuario);
         }
 
-        updateIfNotNull(tarefaDTO.getNome(), tarefa::setNome);
-        updateIfNotNull(tarefaDTO.getDescricao(), tarefa::setDescricao);
-        updateIfNotNull(tarefaDTO.getPrazo(), tarefa::setPrazo);
-        updateIfNotNull(tarefaDTO.getPrioridade(), tarefa::setPrioridade);
-        updateIfNotNull(tarefaDTO.getStatus(), tarefa::setStatus);
+        modelMapper.map(tarefaDTO, Tarefa.class);
 
+        
         tarefaRepository.save(tarefa);
-
+        
         return new TarefaDTO(tarefa);
     }
-
-    // if (tarefaDTO.getNome() != null){
-    // tarefa.setNome(tarefaDTO.getNome());
-    // }
-    // if (tarefaDTO.getDescricao() != null) {
-    // tarefa.setDescricao(tarefaDTO.getDescricao());
-    // }
-    // if (tarefaDTO.getPrazo() != null) {
-    // tarefa.setPrazo(tarefaDTO.getPrazo());
-    // }
-    // if (tarefaDTO.getPrioridade() != null) {
-    // tarefa.setPrioridade(tarefaDTO.getPrioridade());
-    // }
-    // if (tarefaDTO.getStatus() != null) {
-    // tarefa.setStatus(tarefaDTO.getStatus());
-    // }
-
-    private <T> void updateIfNotNull(T DTOIn, Consumer<T> entidade) {
-        if (DTOIn != null) {
-            entidade.accept(DTOIn);
-        }
-    }
-
+    
+    // private <T> void updateIfNotNull(T source, Object entidade) { // Método genérico pra reaproveitamento de lógica em outros updates que podem vir a ser nulos, pode ser útil em outro projeto. 
+    //     if (source != null) {
+        //         modelMapper.map(source, entidade);
+        //     }
+        // }
+        
+        // updateIfNotNull(tarefaDTO, tarefa); // usado no atualizaTarefa antes de colocar o mapper direto 
 }
