@@ -12,7 +12,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import br.com.felipeTarefas.domain.dtos.TarefaDTO;
+import br.com.felipeTarefas.domain.dtos.TarefaDTOIn;
+import br.com.felipeTarefas.domain.dtos.TarefaDTOout;
 import br.com.felipeTarefas.service.TarefaService;
 
 
@@ -24,18 +25,18 @@ public class TarefaController {
     private TarefaService tarefaService;
 
     @PostMapping()
-    public ResponseEntity<TarefaDTO> criarTarefa(@RequestBody TarefaDTO tarefaDTO) {
-        TarefaDTO tarefaCriada = tarefaService.criarTarefa(tarefaDTO);
+    public ResponseEntity<TarefaDTOout> criarTarefa(@RequestBody TarefaDTOIn tarefaDTOIn) {
+        TarefaDTOout tarefaCriada = tarefaService.criarTarefa(tarefaDTOIn);
         return ResponseEntity.status(HttpStatus.CREATED).body(tarefaCriada);
     }
 
     @GetMapping
-    public List<TarefaDTO> listaTarefas() {
+    public List<TarefaDTOout> listaTarefas() {
         return tarefaService.listarTarefas();
     }
 
     @GetMapping("/usuario/{usuarioId}")
-    public List<TarefaDTO> listarTarefasPorUsuario(@PathVariable Long usuarioId) {
+    public List<TarefaDTOout> listarTarefasPorUsuario(@PathVariable Long usuarioId) {
         return tarefaService.findTarefasByUsuarioId(usuarioId);        
     }
 

@@ -1,6 +1,5 @@
 package br.com.felipeTarefas.domain.dtos;
 
-import br.com.felipeTarefas.domain.Usuario;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

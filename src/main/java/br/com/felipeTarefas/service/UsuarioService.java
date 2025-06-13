@@ -16,12 +16,6 @@ import br.com.felipeTarefas.domain.dtos.UsuarioDTOout;
 import br.com.felipeTarefas.repositories.UsuarioRepository;
 import lombok.extern.slf4j.Slf4j;
 
-// TO DO - Arrumar e revisar camadas de Tarefas
-// TO DO - Testes unitários
-// TO DO - Terminar de implementar logs
-// TO DO - Começar autenticação com JWT
-// TO DO - Dividir DTOs de tarefas e associar automaticamente tarefa criada ao usuário logado
-
 @Service
 @Slf4j
 public class UsuarioService {
@@ -46,7 +40,7 @@ public class UsuarioService {
         }
 
         return usuarios.stream().map(usuario -> modelMapper
-                            .map(usuarios, UsuarioDTOout.class))
+                            .map(usuario, UsuarioDTOout.class))
                             .collect(Collectors.toList());
     }
 

@@ -10,11 +10,13 @@ import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Getter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class TarefaDTO {
+public class TarefaDTOIn {
 
     private Long id;
 
@@ -24,19 +26,17 @@ public class TarefaDTO {
     @NotBlank(message = "Descrição da tarefa é obrigatória")
     private String descricao;
 
-
     private LocalDateTime prazo;
 
     @NotNull(message = "Prioridade é obrigatório")
     private PrioridadeEnum prioridade;
-
 
     private StatusEnum status;
 
     @NotNull(message = "O ID do usuário é obrigatório") // após desenvolver autenticação e associação automática, remover associação manual que está sendo enviada no corpo da requisição. 
     private Long usuarioId;
 
-    public TarefaDTO (Tarefa tarefa){
+    public TarefaDTOIn (Tarefa tarefa){
         this.descricao = tarefa.getDescricao();
         this.id = tarefa.getId();
         this.nome = tarefa.getNome();
