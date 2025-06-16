@@ -38,7 +38,6 @@ public class UsuarioController {
             @ApiResponse(responseCode = "200", description = "Lista de usuários retornada com sucesso"),
             @ApiResponse(responseCode = "500", description = "Erro interno no servidor")
     })
-    
     @GetMapping
     public ResponseEntity<List<UsuarioDTOout>> listarUsuarios() {
         log.info("Requisição de listagem de usuários recebida");

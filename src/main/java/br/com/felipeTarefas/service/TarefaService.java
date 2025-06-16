@@ -38,7 +38,7 @@ public class TarefaService {
     public List<TarefaDTOout> listarTarefas() {
         return tarefaRepository.findAll().stream()
                 .map(t -> modelMapper
-                .map(t, TarefaDTOout.class))
+                        .map(t, TarefaDTOout.class))
                 .collect(Collectors.toList());
     }
 
@@ -47,9 +47,11 @@ public class TarefaService {
         Tarefa novaTarefa = modelMapper.map(tarefaDTOIn, Tarefa.class);
 
         Usuario usuario = usuarioRepository.findById(tarefaDTOIn.getUsuarioId())
-                .orElseThrow(() -> new UsuarioNaoEncontradoException(tarefaDTOIn.getUsuarioId())); // associando usuário manualmente na tarefa
+                .orElseThrow(() -> new UsuarioNaoEncontradoException(tarefaDTOIn.getUsuarioId())); // associando usuário
+                                                                                                   // manualmente na
+                                                                                                   // tarefa
 
-        novaTarefa.setUsuario(usuario); 
+        novaTarefa.setUsuario(usuario);
 
         Tarefa tarefaSalva = tarefaRepository.save(novaTarefa);
         TarefaDTOout tarefaDTOout = modelMapper.map(tarefaSalva, TarefaDTOout.class);
@@ -59,14 +61,17 @@ public class TarefaService {
     }
 
     public List<TarefaDTOout> findTarefasByUsuarioId(Long usuarioId) {
+        usuarioRepository.findById(usuarioId)
+                .orElseThrow(() -> new UsuarioNaoEncontradoException(usuarioId));
+
         List<Tarefa> tarefas = tarefaRepository.findTarefasByUsuario_Id(usuarioId);
 
         return tarefas.stream().map(t -> {
             TarefaDTOout tarefaDTOout = modelMapper.map(t, TarefaDTOout.class);
             tarefaDTOout.setUsuarioId(t.getUsuario().getId());
             return tarefaDTOout;
-         })
-            .collect(Collectors.toList());
+        })
+                .collect(Collectors.toList());
     }
 
     public TarefaDTOout atualizaTarefa(Long id, TarefaDTOIn tarefaDTOIn) {
@@ -85,7 +90,7 @@ public class TarefaService {
         return tarefaDTOout;
     }
 
-    public void deletaTarefa(Long id){
+    public void deletaTarefa(Long id) {
         Optional<Tarefa> tarefa = tarefaRepository.findById(id);
         if (tarefa.isEmpty()) {
             throw new TarefaNaoEncontradaException(id);
@@ -93,5 +98,5 @@ public class TarefaService {
             tarefaRepository.deleteById(id);
         }
     }
-    
+
 }
