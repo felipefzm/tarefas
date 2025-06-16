@@ -69,21 +69,20 @@ public class TarefaService {
             .collect(Collectors.toList());
     }
 
-    public TarefaDTOIn atualizaTarefa(Long id, TarefaDTOIn tarefaDTO) {
+    public TarefaDTOout atualizaTarefa(Long id, TarefaDTOIn tarefaDTOIn) {
         Tarefa tarefa = tarefaRepository.findById(id)
                 .orElseThrow(() -> new TarefaNaoEncontradaException(id));
 
-        if (tarefaDTO.getUsuarioId() != null) {
-            Usuario usuario = usuarioService.findEntityById(tarefaDTO.getUsuarioId());
+        if (tarefaDTOIn.getUsuarioId() != null) {
+            Usuario usuario = usuarioService.findEntityById(tarefaDTOIn.getUsuarioId());
             tarefa.setUsuario(usuario);
         }
 
-        modelMapper.map(tarefaDTO, Tarefa.class);
-
-        
-        tarefaRepository.save(tarefa);
-        
-        return new TarefaDTOIn(tarefa);
+        modelMapper.map(tarefaDTOIn, tarefa);
+        Tarefa tarefaSalva = tarefaRepository.save(tarefa);
+        TarefaDTOout tarefaDTOout = modelMapper.map(tarefaSalva, TarefaDTOout.class);
+        tarefaDTOout.setUsuarioId(tarefaSalva.getUsuario().getId());
+        return tarefaDTOout;
     }
 
     public void deletaTarefa(Long id){

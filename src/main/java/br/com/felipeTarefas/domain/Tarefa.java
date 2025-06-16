@@ -50,9 +50,5 @@ public class Tarefa {
     @Convert(converter = PrioridadeEnumConverter.class)
     private PrioridadeEnum prioridade;
 
-    
-    public Long getUsuarioId(){
-        return usuario.getId();
-    }
 
 }

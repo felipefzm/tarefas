@@ -12,6 +12,9 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 public class TarefaDetalheDTOOut {
+    //TarefaDTO sem usuarioID
+    // Usar ao desenvolver autenticação
+    
     private String nome;
 
     private String descricao;

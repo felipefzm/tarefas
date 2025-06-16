@@ -6,7 +6,6 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 @SpringBootApplication
 public class FelipeTarefasApplication {
 
-// TO DO - Fazer divisão de DTOs Tarefas
 // TO DO - Documentar Swagger Básico - Tarefas 
 // TO DO - Testes Unitários - Services e Repositories
 // TO DO - Começar autenticação com JWT e associar usuário automaticamente à tarefa
