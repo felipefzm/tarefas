@@ -4,7 +4,10 @@ import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
+import br.com.felipeTarefas.enums.RoleName;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -30,6 +33,8 @@ public class Usuario {
 
     private String username;
 
+    private String password;
+
     private String email;
 
     private String cpf;
@@ -37,6 +42,9 @@ public class Usuario {
     @OneToMany(mappedBy = "usuario", fetch = FetchType.LAZY, orphanRemoval = true)
     @JsonManagedReference
     private List<Tarefa> tarefa;
+
+    @Enumerated(EnumType.STRING)
+    private RoleName role;
 
 
 }
