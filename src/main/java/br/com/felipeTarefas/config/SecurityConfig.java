@@ -10,6 +10,7 @@ import br.com.felipeTarefas.security.UsuarioDetailsService;
 public class SecurityConfig {
 
     private final UsuarioDetailsService usuarioDetailsService;
+    
 
     public SecurityConfig(UsuarioDetailsService usuarioDetailsService){
         this.usuarioDetailsService = usuarioDetailsService;
