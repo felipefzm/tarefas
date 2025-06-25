@@ -39,8 +39,9 @@ public class AuthController {
         if (!passwordEncoder.matches(request.password(), usuarioDetails.getPassword())) {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         } else {
-            String token = tokenService.gerarToken(usuarioDetails);
-            return ResponseEntity.ok(new TokenResponse(usuario.getEmail(), token));
+            String token = tokenService.gerarToken(usuarioDetails); // gera o token baseado nos dados vindos do LoginRequest
+            return ResponseEntity.ok(new TokenResponse(usuarioDetails.getUsername(), token));
+            // retorna email e token
         }
     }
     

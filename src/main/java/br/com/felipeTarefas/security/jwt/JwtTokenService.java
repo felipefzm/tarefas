@@ -33,9 +33,8 @@ public class JwtTokenService {
     
         public String validateToken(String token){
             try {
-                JWT.require(algoritmo).build()
+                return JWT.require(algoritmo).build()
                 .verify(token).getSubject();
-                return token;
             } catch (JWTVerificationException exception) {
                 return null;
             }

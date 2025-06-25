@@ -1,16 +1,15 @@
 package br.com.felipeTarefas.security.jwt;
 
 import java.io.IOException;
-import java.util.Collections;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
+import br.com.felipeTarefas.security.UsuarioDetails;
 import br.com.felipeTarefas.security.UsuarioDetailsService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -34,13 +33,13 @@ public class JwtFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
-        var token = this.recoverToken(request);
+        String token = this.recoverToken(request);
         var login = jwtService.validateToken(token);
 
         if (login != null) {
-            UserDetails userDetails = usuarioDetailsService.loadUserByUsername(login);
-            var authorities = userDetails.getAuthorities();
-            var authentication = new UsernamePasswordAuthenticationToken(userDetails, null, authorities);
+            UserDetails usuarioDetails = usuarioDetailsService.loadUserByUsername(login);
+            var authorities = usuarioDetails.getAuthorities();
+            var authentication = new UsernamePasswordAuthenticationToken(usuarioDetails, null, authorities);
             SecurityContextHolder.getContext().setAuthentication(authentication);
         }
         filterChain.doFilter(request, response);
