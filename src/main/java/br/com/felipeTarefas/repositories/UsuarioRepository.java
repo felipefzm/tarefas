@@ -7,7 +7,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import br.com.felipeTarefas.domain.Usuario;
 
 public interface UsuarioRepository extends JpaRepository<Usuario, Long> {
-    Optional<Usuario> findUsuarioByUsername(String username);
+    Optional<Usuario> findUsuarioByEmail(String email);
 
 
 }

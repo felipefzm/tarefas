@@ -12,8 +12,8 @@ import br.com.felipeTarefas.config.exceptions.TarefaNaoEncontradaException;
 import br.com.felipeTarefas.config.exceptions.UsuarioNaoEncontradoException;
 import br.com.felipeTarefas.domain.Tarefa;
 import br.com.felipeTarefas.domain.Usuario;
-import br.com.felipeTarefas.domain.dtos.TarefaDTOIn;
-import br.com.felipeTarefas.domain.dtos.TarefaDTOout;
+import br.com.felipeTarefas.domain.dtos.In.TarefaDTOIn;
+import br.com.felipeTarefas.domain.dtos.Out.TarefaDTOout;
 import br.com.felipeTarefas.repositories.TarefaRepository;
 import br.com.felipeTarefas.repositories.UsuarioRepository;
 
@@ -47,9 +47,8 @@ public class TarefaService {
         Tarefa novaTarefa = modelMapper.map(tarefaDTOIn, Tarefa.class);
 
         Usuario usuario = usuarioRepository.findById(tarefaDTOIn.getUsuarioId())
-                .orElseThrow(() -> new UsuarioNaoEncontradoException(tarefaDTOIn.getUsuarioId())); // associando usuário
-                                                                                                   // manualmente na
-                                                                                                   // tarefa
+                .orElseThrow(() -> new UsuarioNaoEncontradoException(tarefaDTOIn.getUsuarioId())); 
+                // associando usuário manualmente na tarefa
 
         novaTarefa.setUsuario(usuario);
 

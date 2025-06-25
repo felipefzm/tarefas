@@ -1,4 +1,4 @@
-package br.com.felipeTarefas.domain.dtos;
+package br.com.felipeTarefas.domain.dtos.In;
 
 import br.com.felipeTarefas.domain.Usuario;
 import jakarta.validation.constraints.NotBlank;

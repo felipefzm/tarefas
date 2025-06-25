@@ -1,4 +1,4 @@
-package br.com.felipeTarefas.domain.dtos;
+package br.com.felipeTarefas.domain.dtos.Out;
 
 import java.time.LocalDateTime;
 
@@ -11,12 +11,17 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
-public class TarefaDTOout {
-    private String nome; 
-    private String descricao;
-    private LocalDateTime prazo;
-    private StatusEnum statusEnum;
-    private PrioridadeEnum prioridade;
-    private Long usuarioId;
+public class TarefaDetalheDTOOut {
+    //TarefaDTO sem usuarioID
+    // Usar ao desenvolver autenticação
     
+    private String nome;
+
+    private String descricao;
+
+    private LocalDateTime prazo;
+
+    private StatusEnum statusEnum;
+    
+    private PrioridadeEnum prioridade;
 }

@@ -13,8 +13,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import br.com.felipeTarefas.domain.dtos.UsuarioDTOin;
-import br.com.felipeTarefas.domain.dtos.UsuarioDTOout;
+import br.com.felipeTarefas.domain.dtos.In.UsuarioDTOin;
+import br.com.felipeTarefas.domain.dtos.Out.UsuarioDTOout;
 import br.com.felipeTarefas.service.UsuarioService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;

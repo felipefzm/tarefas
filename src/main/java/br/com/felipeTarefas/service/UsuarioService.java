@@ -11,8 +11,8 @@ import org.springframework.stereotype.Service;
 
 import br.com.felipeTarefas.config.exceptions.UsuarioNaoEncontradoException;
 import br.com.felipeTarefas.domain.Usuario;
-import br.com.felipeTarefas.domain.dtos.UsuarioDTOin;
-import br.com.felipeTarefas.domain.dtos.UsuarioDTOout;
+import br.com.felipeTarefas.domain.dtos.In.UsuarioDTOin;
+import br.com.felipeTarefas.domain.dtos.Out.UsuarioDTOout;
 import br.com.felipeTarefas.repositories.UsuarioRepository;
 import lombok.extern.slf4j.Slf4j;
 

@@ -1,4 +1,4 @@
-package br.com.felipeTarefas.domain.dtos;
+package br.com.felipeTarefas.domain.dtos.Out;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

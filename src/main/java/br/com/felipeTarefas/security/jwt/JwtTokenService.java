@@ -17,10 +17,10 @@ public class JwtTokenService {
     // trocar pra storage no app.properties
     private final String secretKey = "super-chave-secreta-teste-jwt";
     private Date expiracao = new Date(System.currentTimeMillis() + 3_600_000);
+    private Algorithm algoritmo = Algorithm.HMAC256(secretKey);
 
     public String gerarToken(UsuarioDetails usuarioDetails) {
         try {
-            Algorithm algoritmo = Algorithm.HMAC256(secretKey);
             String token = JWT.create().withIssuer("tarefas-auth-api")
                     .withSubject(usuarioDetails.getUsername())
                     .withExpiresAt(expiracao)
@@ -30,17 +30,21 @@ public class JwtTokenService {
             throw new RuntimeException("Erro na autenticação");
         }
     }
+    
+        public String validateToken(String token){
+            try {
+                JWT.require(algoritmo).build()
+                .verify(token).getSubject();
+                return token;
+            } catch (JWTVerificationException exception) {
+                return null;
+            }
+        }   
 
-    public String validarToken(String token) {
-        try {
-            Algorithm algoritmo = Algorithm.HMAC256(secretKey);
-            JWT.require(algoritmo)
-                    .withIssuer("tarefas-auth-api")
-                    .build().verify(token).getSubject();
-                    return token;
-        } catch (JWTVerificationException exception) {
-            return null;
-        }
+
+    public boolean tokenValido(String token, UsuarioDetails usuarioDetails){
+        String email = validateToken(token);
+        return email.equals(usuarioDetails.getUsername());
     }
 
 }

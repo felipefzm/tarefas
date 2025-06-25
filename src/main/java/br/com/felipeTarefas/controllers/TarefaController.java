@@ -14,8 +14,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import br.com.felipeTarefas.domain.dtos.TarefaDTOIn;
-import br.com.felipeTarefas.domain.dtos.TarefaDTOout;
+import br.com.felipeTarefas.domain.dtos.In.TarefaDTOIn;
+import br.com.felipeTarefas.domain.dtos.Out.TarefaDTOout;
 import br.com.felipeTarefas.service.TarefaService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
