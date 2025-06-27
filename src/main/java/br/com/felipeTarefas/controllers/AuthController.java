@@ -15,17 +15,18 @@ import br.com.felipeTarefas.domain.Usuario;
 import br.com.felipeTarefas.domain.dtos.In.LoginRequest;
 import br.com.felipeTarefas.domain.dtos.In.UsuarioDTOin;
 import br.com.felipeTarefas.domain.dtos.Out.TokenResponse;
-import br.com.felipeTarefas.domain.dtos.Out.UsuarioDTOout;
 import br.com.felipeTarefas.repositories.UsuarioRepository;
 import br.com.felipeTarefas.security.UsuarioDetails;
 import br.com.felipeTarefas.security.jwt.JwtTokenService;
 import br.com.felipeTarefas.service.UsuarioService;
 import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @RestController
 @RequestMapping("/auth")
 @RequiredArgsConstructor
+@Slf4j
 public class AuthController {
 
     private final UsuarioRepository usuarioRepository;
@@ -68,6 +69,8 @@ public class AuthController {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
             
         } else {
+            usuarioService.criarUsuario(usuarioDTOin); // testar
+            log.info("Retorna DTO de saída de usuário");
             UsuarioDetails usuarioDetails = new UsuarioDetails(usuario);
             String token = tokenService.gerarToken(usuarioDetails); // gera o token baseado nos dados do request
             return ResponseEntity.ok(new TokenResponse(usuarioDetails.getUsername(), token));
