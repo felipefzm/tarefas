@@ -21,6 +21,9 @@ public class UsuarioDTOin {
     @NotBlank(message = "Email é obrigatório")
     private String email;
 
+    @NotBlank(message = "Senha obrigatória")
+    private String password;
+
     private String cpf;
 
     public UsuarioDTOin(Usuario usuario){

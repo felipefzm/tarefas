@@ -9,7 +9,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
-import br.com.felipeTarefas.security.UsuarioDetails;
 import br.com.felipeTarefas.security.UsuarioDetailsService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;

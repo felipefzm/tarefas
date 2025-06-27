@@ -7,6 +7,7 @@ import java.util.stream.Collectors;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import br.com.felipeTarefas.config.exceptions.UsuarioNaoEncontradoException;
@@ -29,6 +30,9 @@ public class UsuarioService {
     @Autowired
     private ModelMapper modelMapper;
 
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
     public List<UsuarioDTOout> listarUsuarios() { 
         Sort sort = Sort.by("id").ascending();
         List<Usuario> usuarios = usuarioRepository.findAll(sort);
@@ -47,6 +51,7 @@ public class UsuarioService {
 
     public UsuarioDTOout criarUsuario(UsuarioDTOin usuarioDTOin) {
         Usuario newUsuario = modelMapper.map(usuarioDTOin, Usuario.class);
+        newUsuario.setPassword(passwordEncoder.encode(usuarioDTOin.getPassword()));
         usuarioRepository.save(newUsuario);
         log.info("Usuário criado e salvo no banco.");
         return modelMapper.map(newUsuario, UsuarioDTOout.class);
