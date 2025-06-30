@@ -87,4 +87,15 @@ public class UsuarioService {
         .orElseThrow(() -> new UsuarioNaoEncontradoException(id));
     }
 
+    public Usuario registrarUsuario(UsuarioDTOin usuarioDTOin) {
+        Usuario newUsuario = modelMapper.map(usuarioDTOin, Usuario.class);
+        newUsuario.setPassword(passwordEncoder.encode(usuarioDTOin.getPassword()));
+        usuarioRepository.save(newUsuario);
+        log.info("Usuário registrado e salvo no banco.");
+        return newUsuario;
+
+    }
+
+
+
 }

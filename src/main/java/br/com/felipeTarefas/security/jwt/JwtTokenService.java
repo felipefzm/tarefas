@@ -39,11 +39,4 @@ public class JwtTokenService {
                 return null;
             }
         }   
-
-
-    public boolean tokenValido(String token, UsuarioDetails usuarioDetails){
-        String email = validateToken(token);
-        return email.equals(usuarioDetails.getUsername());
-    }
-
 }

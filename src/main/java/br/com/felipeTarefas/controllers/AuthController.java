@@ -2,11 +2,13 @@ package br.com.felipeTarefas.controllers;
 
 import java.util.Optional;
 
-import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -29,29 +31,30 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class AuthController {
 
+    @Autowired
     private final UsuarioRepository usuarioRepository;
 
-    private final PasswordEncoder passwordEncoder;
-
+    @Autowired
     private final JwtTokenService tokenService;
 
+    @Autowired
     private final UsuarioService usuarioService;
 
-    private final ModelMapper modelMapper;
+    @Autowired
+    private AuthenticationManager authenticationManager;
 
     @PostMapping("/login")
     public ResponseEntity<TokenResponse> login(@RequestBody LoginRequest request) {
-        Usuario usuario = usuarioRepository.findUsuarioByEmail(request.email())
-                .orElseThrow(() -> new UsernameNotFoundException("Usuario com esse email não encontrado"));
-        UsuarioDetails usuarioDetails = new UsuarioDetails(usuario);
+        try {
+            Authentication auth = authenticationManager
+                    .authenticate(new UsernamePasswordAuthenticationToken(request.email(), request.password()));
 
-        if (!passwordEncoder.matches(request.password(), usuarioDetails.getPassword())) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
-        } else {
-            String token = tokenService.gerarToken(usuarioDetails); // gera o token baseado nos dados vindos do
-                                                                    // LoginRequest
+            UsuarioDetails usuarioDetails = (UsuarioDetails) auth.getPrincipal();
+            String token = tokenService.gerarToken(usuarioDetails);
             return ResponseEntity.ok(new TokenResponse(usuarioDetails.getUsername(), token));
-            // retorna email e token
+
+        } catch (BadCredentialsException e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
     }
 
@@ -59,18 +62,11 @@ public class AuthController {
     public ResponseEntity<TokenResponse> register(@RequestBody UsuarioDTOin usuarioDTOin) {
         Optional<Usuario> usuarioOptional = usuarioRepository.findUsuarioByEmail(usuarioDTOin.getEmail());
 
-        if (usuarioOptional.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
-        }
-
-        Usuario usuario = usuarioOptional.get();
-
-        if (!passwordEncoder.matches(usuarioDTOin.getPassword(), usuario.getPassword())) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
-            
+        if (usuarioOptional.isPresent()) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).build();
         } else {
-            usuarioService.criarUsuario(usuarioDTOin); // testar
-            log.info("Retorna DTO de saída de usuário");
+            Usuario usuario = usuarioService.registrarUsuario(usuarioDTOin); // testar
+            log.info("Usuário criado com sucesso");
             UsuarioDetails usuarioDetails = new UsuarioDetails(usuario);
             String token = tokenService.gerarToken(usuarioDetails); // gera o token baseado nos dados do request
             return ResponseEntity.ok(new TokenResponse(usuarioDetails.getUsername(), token));

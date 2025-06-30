@@ -20,10 +20,12 @@ import br.com.felipeTarefas.service.TarefaService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/tarefas")
+@SecurityRequirement(name = "bearerAuth")
 public class TarefaController {
 
     @Autowired

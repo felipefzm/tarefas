@@ -19,17 +19,19 @@ import br.com.felipeTarefas.service.UsuarioService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 
 @RestController
 @RequestMapping("/usuarios")
 @Slf4j
+@SecurityRequirement(name = "bearerAuth")
 public class UsuarioController {
 
     private final UsuarioService usuarioService;
 
-    public UsuarioController(UsuarioService usuarioService){
+    public UsuarioController(UsuarioService usuarioService) {
         this.usuarioService = usuarioService;
     }
 
@@ -67,7 +69,8 @@ public class UsuarioController {
             @ApiResponse(responseCode = "500", description = "Erro interno no servidor")
     })
     @PatchMapping("/{id}")
-    public ResponseEntity<UsuarioDTOout> atualizaUsuario(@PathVariable Long id, @Valid @RequestBody UsuarioDTOin usuarioDTOin) {
+    public ResponseEntity<UsuarioDTOout> atualizaUsuario(@PathVariable Long id,
+            @Valid @RequestBody UsuarioDTOin usuarioDTOin) {
         log.info("Requisição de atualização de usuário recebida para o id {}.", id);
         UsuarioDTOout usuarioAtualizado = usuarioService.atualizaUsuario(id, usuarioDTOin);
         return ResponseEntity.status(HttpStatus.OK).body(usuarioAtualizado);
@@ -92,13 +95,16 @@ public class UsuarioController {
             @ApiResponse(responseCode = "404", description = "Usuário não encontrado"),
             @ApiResponse(responseCode = "500", description = "Erro interno no servidor")
     })
-    @GetMapping({"/{id}"})
+    @GetMapping({ "/{id}" })
     public ResponseEntity<UsuarioDTOout> findById(@PathVariable Long id) {
         log.info("Requisição de busca de usuário por id: {}", id);
         UsuarioDTOout usuarioDTOout = usuarioService.findById(id);
         return ResponseEntity.status(HttpStatus.OK).body(usuarioDTOout);
-        
-        
+    }
+
+    @GetMapping("/segredo")
+    public String segredo() {
+        return "Você acessou um endpoint protegido!";
     }
 
 }
