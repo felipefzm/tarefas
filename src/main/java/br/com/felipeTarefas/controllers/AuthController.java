@@ -22,6 +22,7 @@ import br.com.felipeTarefas.security.UsuarioDetails;
 import br.com.felipeTarefas.security.jwt.JwtTokenService;
 import br.com.felipeTarefas.service.UsuarioService;
 import io.swagger.v3.oas.annotations.parameters.RequestBody;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -59,7 +60,12 @@ public class AuthController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<TokenResponse> register(@RequestBody UsuarioDTOin usuarioDTOin) {
+    public ResponseEntity<TokenResponse> register(@Valid @RequestBody UsuarioDTOin usuarioDTOin) {
+        log.info("DTO recebido: username: {}, email: {}, senha: {}", 
+        usuarioDTOin.getUsername(), 
+        usuarioDTOin.getEmail(), 
+        usuarioDTOin.getPassword());
+        
         Optional<Usuario> usuarioOptional = usuarioRepository.findUsuarioByEmail(usuarioDTOin.getEmail());
 
         if (usuarioOptional.isPresent()) {

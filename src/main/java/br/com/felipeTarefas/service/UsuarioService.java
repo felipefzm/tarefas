@@ -89,11 +89,12 @@ public class UsuarioService {
 
     public Usuario registrarUsuario(UsuarioDTOin usuarioDTOin) {
         Usuario newUsuario = modelMapper.map(usuarioDTOin, Usuario.class);
-        newUsuario.setPassword(passwordEncoder.encode(usuarioDTOin.getPassword()));
+        String senhaPura = usuarioDTOin.getPassword();
+        newUsuario.setPassword(passwordEncoder.encode(senhaPura));
+        log.info("Senha recebida: {}", newUsuario.getPassword());
         usuarioRepository.save(newUsuario);
         log.info("Usuário registrado e salvo no banco.");
         return newUsuario;
-
     }
 
 
