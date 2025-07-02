@@ -1,6 +1,7 @@
 package br.com.felipeTarefas.security;
 
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 import org.springframework.security.core.GrantedAuthority;
@@ -19,6 +20,9 @@ public class UsuarioDetails implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
+        if (usuario.getRole() == null) {
+            return Collections.emptyList();
+        }
         return List.of(new SimpleGrantedAuthority("ROLE_" + usuario.getRole().name()));
     }
 

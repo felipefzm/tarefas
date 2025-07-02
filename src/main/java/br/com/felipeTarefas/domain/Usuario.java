@@ -5,6 +5,7 @@ import java.util.List;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import br.com.felipeTarefas.enums.RoleName;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -44,7 +45,8 @@ public class Usuario {
     private List<Tarefa> tarefa;
 
     @Enumerated(EnumType.STRING)
-    private RoleName role;
+    @Column(nullable = false)
+    private RoleName role = RoleName.USER;
 
 
 }
