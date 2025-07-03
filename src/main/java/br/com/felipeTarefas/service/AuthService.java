@@ -12,6 +12,8 @@ import br.com.felipeTarefas.domain.Usuario;
 import br.com.felipeTarefas.domain.dtos.In.LoginRequest;
 import br.com.felipeTarefas.domain.dtos.In.UsuarioDTOin;
 import br.com.felipeTarefas.domain.dtos.Out.TokenResponse;
+import br.com.felipeTarefas.domain.dtos.Out.UsuarioDTOout;
+import br.com.felipeTarefas.enums.RoleName;
 import br.com.felipeTarefas.repositories.UsuarioRepository;
 import br.com.felipeTarefas.security.UsuarioDetails;
 import br.com.felipeTarefas.security.jwt.JwtTokenService;
@@ -41,6 +43,7 @@ public class AuthService {
         String senhaPura = usuarioDTOin.getPassword();
         newUsuario.setPassword(passwordEncoder.encode(senhaPura));
         log.info("Senha recebida: {}", newUsuario.getPassword());
+        newUsuario.setRole(RoleName.USER);
         usuarioRepository.save(newUsuario);
         log.info("Usuário registrado e salvo no banco.");
 
@@ -56,6 +59,16 @@ public class AuthService {
             UsuarioDetails usuarioDetails = (UsuarioDetails) auth.getPrincipal();
             String token = tokenService.gerarToken(usuarioDetails);
             return new TokenResponse(usuarioDetails.getUsername(), token);
+    }
+
+    public UsuarioDTOout criarUsuarioComOpçaoAdmin(UsuarioDTOin usuarioDTOin) {
+        Usuario newUsuario = modelMapper.map(usuarioDTOin, Usuario.class);
+        newUsuario.setPassword(passwordEncoder.encode(usuarioDTOin.getPassword()));
+        newUsuario.setRole(usuarioDTOin.getRole() != null ? usuarioDTOin.getRole() : RoleName.USER);
+        usuarioRepository.save(newUsuario);
+        log.info("Usuário com role: "+newUsuario.getRole()+" salvo no banco.");
+        return modelMapper.map(newUsuario, UsuarioDTOout.class);
+
     }
 
 }

@@ -1,5 +1,6 @@
 package br.com.felipeTarefas.domain.dtos.In;
 
+import br.com.felipeTarefas.enums.RoleName;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -22,5 +23,7 @@ public class UsuarioDTOin {
     private String password;
 
     private String cpf;
+
+    private RoleName role;
 
 }

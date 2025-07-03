@@ -5,6 +5,7 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -15,6 +16,7 @@ import br.com.felipeTarefas.domain.Usuario;
 import br.com.felipeTarefas.domain.dtos.In.LoginRequest;
 import br.com.felipeTarefas.domain.dtos.In.UsuarioDTOin;
 import br.com.felipeTarefas.domain.dtos.Out.TokenResponse;
+import br.com.felipeTarefas.domain.dtos.Out.UsuarioDTOout;
 import br.com.felipeTarefas.repositories.UsuarioRepository;
 import br.com.felipeTarefas.service.AuthService;
 import jakarta.validation.Valid;
@@ -32,7 +34,6 @@ public class AuthController {
 
     @Autowired
     private final AuthService authService;
-
 
     @PostMapping("/login")
     public ResponseEntity<TokenResponse> login(@Valid @RequestBody LoginRequest request) {
@@ -54,13 +55,24 @@ public class AuthController {
         Optional<Usuario> usuarioOptional = usuarioRepository.findUsuarioByEmail(usuarioDTOin.getEmail());
 
         if (usuarioOptional.isPresent()) {
-            log.info("Tentativa de criação de usuário com email já existente: {}", 
-            usuarioDTOin.getEmail());
+            log.info("Tentativa de criação de usuário com email já existente: {}",
+                    usuarioDTOin.getEmail());
             return ResponseEntity.status(HttpStatus.CONFLICT).build();
         } else {
             TokenResponse tokenResponse = authService.registrarUsuario(usuarioDTOin); // testar
             log.info("Usuário registrado com sucesso");
             return ResponseEntity.status(HttpStatus.CREATED).body(tokenResponse);
         }
+    }
+
+    @PreAuthorize("hasRole('ADMIN')")
+    @PostMapping("/admin/usuarios")
+    public ResponseEntity<UsuarioDTOout> criarUsuarioOpçaoAdmin(@Valid @RequestBody UsuarioDTOin usuarioDTOin) {
+        log.info("Usuario criado: username: {}, email: {}, cpf: {}, password: {}, role: {}",
+                usuarioDTOin.getUsername(), usuarioDTOin.getEmail(), usuarioDTOin.getCpf(),
+                usuarioDTOin.getPassword(), usuarioDTOin.getRole());
+
+        UsuarioDTOout usuario = authService.criarUsuarioComOpçaoAdmin(usuarioDTOin);
+        return ResponseEntity.status(HttpStatus.CREATED).body(usuario);
     }
 }
