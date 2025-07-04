@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -82,6 +83,7 @@ public class UsuarioController {
             @ApiResponse(responseCode = "404", description = "Usuário não encontrado"),
             @ApiResponse(responseCode = "500", description = "Erro interno no servidor")
     })
+    @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteUsuario(@PathVariable Long id) {
         log.info("Requisição de exlusão de usuário com id: {}", id);
@@ -101,10 +103,4 @@ public class UsuarioController {
         UsuarioDTOout usuarioDTOout = usuarioService.findById(id);
         return ResponseEntity.status(HttpStatus.OK).body(usuarioDTOout);
     }
-
-    @GetMapping("/segredo")
-    public String segredo() {
-        return "Você acessou um endpoint protegido!";
-    }
-
 }

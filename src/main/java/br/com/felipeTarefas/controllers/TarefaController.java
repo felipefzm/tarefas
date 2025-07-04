@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -82,10 +83,11 @@ public class TarefaController {
 
     @Operation(description = "Deleta uma tarefa do sistema")
     @ApiResponses(value = {
-        @ApiResponse(responseCode = "204", description = "Tarefa excluída com sucesso"),
-        @ApiResponse(responseCode = "404", description = "Tarefa não encontrada"),
-        @ApiResponse(responseCode = "500", description = "Erro interno no servidor")
+            @ApiResponse(responseCode = "204", description = "Tarefa excluída com sucesso"),
+            @ApiResponse(responseCode = "404", description = "Tarefa não encontrada"),
+            @ApiResponse(responseCode = "500", description = "Erro interno no servidor")
     })
+    @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deletaTarefa(@PathVariable Long id) {
         tarefaService.deletaTarefa(id);

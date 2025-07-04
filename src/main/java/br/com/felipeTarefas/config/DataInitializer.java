@@ -2,6 +2,7 @@ package br.com.felipeTarefas.config;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
@@ -15,21 +16,22 @@ import lombok.extern.slf4j.Slf4j;
 public class DataInitializer {
 
     @Value("${admin.default.email}")
-    private String adminEmail = "admin123@gmail.com";
+    private String adminEmail;
 
     @Value("${admin.default.password}")
-    private String adminPassword = "adm123";
+    private String adminPassword;
 
-    public CommandLineRunner inicializarAdmin(UsuarioRepository repository, PasswordEncoder encoder) {
+    @Bean
+    public CommandLineRunner inicializarAdmin(UsuarioRepository usuarioRepository, PasswordEncoder passwordEncoder) {
         return mov -> {
-            if (repository.findUsuarioByEmail(adminEmail).isEmpty()) {
+            if (usuarioRepository.findUsuarioByEmail(adminEmail).isEmpty()) {
                 Usuario newAdmin = new Usuario();
                 newAdmin.setUsername("ADM");
                 newAdmin.setCpf("000000000-11");
                 newAdmin.setEmail(adminEmail);
                 newAdmin.setRole(RoleName.ADMIN);
-                newAdmin.setPassword(encoder.encode(adminPassword));
-                repository.save(newAdmin);
+                newAdmin.setPassword(passwordEncoder.encode(adminPassword));
+                usuarioRepository.save(newAdmin);
                 log.info("Admin inicial criado com sucesso");
             }
         };

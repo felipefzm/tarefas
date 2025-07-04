@@ -68,7 +68,8 @@ public class AuthService {
         usuarioRepository.save(newUsuario);
         log.info("Usuário com role: "+newUsuario.getRole()+" salvo no banco.");
         return modelMapper.map(newUsuario, UsuarioDTOout.class);
-
     }
+
+    
 
 }
